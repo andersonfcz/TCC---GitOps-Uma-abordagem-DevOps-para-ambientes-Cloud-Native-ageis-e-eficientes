@@ -1,0 +1,10 @@
+interval: 5m
+sources:
+  - service
+  - ingress
+policy: upsert-only
+registry: txt
+txtOwnerId: "external-dns"
+extraArgs:
+  - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
+  - --crd-source-kind=DNSEndpoint
