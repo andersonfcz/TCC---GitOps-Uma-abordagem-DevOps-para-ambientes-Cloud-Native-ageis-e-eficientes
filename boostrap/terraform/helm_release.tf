@@ -4,6 +4,10 @@ resource "helm_release" "ingress_controller" {
   chart      = "ingress-nginx"
   version    = "4.5.2"
   namespace = "nginx"
+
+  depends_on = [
+    azurerm_kubernetes_cluster.main
+  ]
 }
 
 resource "helm_release" "argocd_operator" {
@@ -18,13 +22,17 @@ resource "helm_release" "argocd_operator" {
     "${file("${path.module}/../helm/argocd/values.yaml")}"
   ]
 
+  depends_on = [
+    azurerm_kubernetes_cluster.main
+  ]
 }
 
 resource "kubectl_manifest" "argocd_sync_app" {
-    yaml_body = file("${path.module}/../helm/argocd/applicationset.yaml")
-    depends_on = [
-      helm_release.argocd_operator
-    ]
+  yaml_body = file("${path.module}/../helm/argocd/applicationset.yaml")
+
+  depends_on = [
+    helm_release.argocd_operator
+  ]
 }
 
 resource "helm_release" "external_dns" {
@@ -68,6 +76,10 @@ resource "helm_release" "external_dns" {
     name = "domainFilters"
     value = var.dns_name
   }
+
+  depends_on = [
+    azurerm_kubernetes_cluster.main
+  ]
 }
 
 resource "helm_release" "cert-manager" {
@@ -82,4 +94,7 @@ resource "helm_release" "cert-manager" {
     "${file("${path.module}/../helm/argocd/values.yaml")}"
   ]
 
+  depends_on = [
+    azurerm_kubernetes_cluster.main
+  ]
 }

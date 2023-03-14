@@ -20,7 +20,7 @@ variable "vm_size" {
 
 variable "dns_name" {
   type = string
-  default = "tcc-unicarioca.com.br"
+  default = "tcc-unicarioca.tech"
 }
 
 variable "app_id" {
