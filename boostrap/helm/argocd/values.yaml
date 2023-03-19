@@ -3,7 +3,13 @@ server:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - argocd.localhost
+      - argocd.tcc-unicarioca.tech
+    annotations:
+      cert-manager.io/cluster-issuer: lets-encrypt
+    tls:
+      - hosts:
+          - argocd.tcc-unicarioca.tech
+        secretName: lets-encrypt
   extraArgs:
     - --insecure
 notifications:

@@ -4,6 +4,7 @@ resource "helm_release" "ingress_controller" {
   chart      = "ingress-nginx"
   version    = "4.5.2"
   namespace = "nginx"
+  create_namespace = true
 
   depends_on = [
     azurerm_kubernetes_cluster.main
@@ -44,41 +45,18 @@ resource "helm_release" "external_dns" {
   create_namespace = true
 
   values = [ 
-    file("${path.module}/../helm/externaldns/values.yaml")
+    templatefile(
+      "${path.module}/../helm/externaldns/values.yaml",
+      {
+        RESOURCE_GROUP = var.resource_name,
+        TENANT_ID = var.tenant_id,
+        SUBSCRIPTION_ID = var.subscription_id,
+      }
+    )
   ]
-
-  set {
-    name = "provider"
-    value = "azure"
-  }
-  
-  set {
-    name = "azure.resourceGroup"
-    value = var.resource_name
-  }
-
-  set {
-    name = "azure.tenantId"
-    value = var.tenant_id
-  }
-
-  set {
-    name = "azure.subscriptionId"
-    value = var.subscription_id
-  }
-
-  set {
-    name = "azure.useManagedIdentityExtension"
-    value = true
-  }
-
-  set {
-    name = "domainFilters"
-    value = var.dns_name
-  }
-
   depends_on = [
-    azurerm_kubernetes_cluster.main
+    azurerm_kubernetes_cluster.main,
+    azurerm_role_assignment.external_dns
   ]
 }
 
@@ -91,10 +69,28 @@ resource "helm_release" "cert-manager" {
   create_namespace = true
 
   values = [ 
-    "${file("${path.module}/../helm/argocd/values.yaml")}"
+    "${file("${path.module}/../helm/cert-manager/values.yaml")}"
   ]
 
   depends_on = [
-    azurerm_kubernetes_cluster.main
+    azurerm_kubernetes_cluster.main,
+    azurerm_role_assignment.external_dns,
+    helm_release.external_dns
+  ]
+}
+
+resource "kubectl_manifest" "cert-manager-issuer" {
+  yaml_body = templatefile(
+    "${path.module}/../helm/cert-manager/issuer.yaml", 
+    {
+      EMAIL = var.email, 
+      SUBSCRIPTION_ID = var.subscription_id,
+      DNS_ZONE_RESOURCE_GROUP = var.resource_name
+      DNS_ZONE_NAME = var.dns_name
+      MANAGED_IDENTITY_CLIENT_ID = azurerm_kubernetes_cluster.main.kubelet_identity.0.client_id
+    }
+  )
+  depends_on = [
+    helm_release.cert-manager
   ]
 }

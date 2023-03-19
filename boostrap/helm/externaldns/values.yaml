@@ -5,6 +5,10 @@ sources:
 policy: upsert-only
 registry: txt
 txtOwnerId: "external-dns"
-extraArgs:
-  - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
-  - --crd-source-kind=DNSEndpoint
+provider: azure
+azure:
+  cloud: AzurePublicCloud
+  resourceGroup: ${RESOURCE_GROUP}
+  tenantId: ${TENANT_ID}
+  subscriptionId: ${SUBSCRIPTION_ID}
+  useManagedIdentityExtension: true

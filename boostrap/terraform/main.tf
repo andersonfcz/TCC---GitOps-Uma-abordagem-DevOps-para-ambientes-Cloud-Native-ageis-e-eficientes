@@ -32,5 +32,6 @@ resource "azurerm_role_assignment" "external_dns" {
   scope                = data.azurerm_dns_zone.tcc-unicarioca.id
   role_definition_name = "DNS Zone Contributor"
   principal_id         = azurerm_kubernetes_cluster.main.kubelet_identity.0.object_id
+  skip_service_principal_aad_check = true
 }
 
