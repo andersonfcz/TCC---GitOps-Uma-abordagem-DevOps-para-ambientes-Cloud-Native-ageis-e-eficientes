@@ -25,7 +25,7 @@ jobs:
 
         defaults:
             run:
-                working-directory: boostrap/terraform
+                working-directory: bootstrap/terraform
                 shell: bash
         steps:
 
