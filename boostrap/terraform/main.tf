@@ -1,8 +1,8 @@
 resource "azurerm_kubernetes_cluster" "main" {
-  name                = "${var.resource_name}-aks-cluster"
+  name                = "${var.resource_group_name}-aks-cluster"
   location            = var.azure_region
-  resource_group_name = var.resource_name
-  dns_prefix          = "${var.resource_name}-k8s"
+  resource_group_name = var.resource_group_name
+  dns_prefix          = "${var.resource_group_name}-k8s"
 
 
   default_node_pool {
@@ -23,15 +23,15 @@ data "azurerm_kubernetes_cluster" "main" {
   resource_group_name = azurerm_kubernetes_cluster.main.resource_group_name
 }
 
-data "azurerm_dns_zone" "tcc-unicarioca" {
+data "azurerm_dns_zone" "tcc_unicarioca" {
   name                = var.dns_name
-  resource_group_name = var.resource_name
+  resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_role_assignment" "external_dns" {
-  scope                = data.azurerm_dns_zone.tcc-unicarioca.id
-  role_definition_name = "DNS Zone Contributor"
-  principal_id         = azurerm_kubernetes_cluster.main.kubelet_identity.0.object_id
+  scope                            = data.azurerm_dns_zone.tcc_unicarioca.id
+  role_definition_name             = "DNS Zone Contributor"
+  principal_id                     = azurerm_kubernetes_cluster.main.kubelet_identity.0.object_id
   skip_service_principal_aad_check = true
 }
 

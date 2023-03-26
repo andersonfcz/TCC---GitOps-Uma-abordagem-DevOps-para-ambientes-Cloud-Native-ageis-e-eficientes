@@ -1,10 +1,10 @@
-interval: 5m
+interval: 1m
 sources:
   - service
   - ingress
-policy: upsert-only
+policy: sync
 registry: txt
-txtOwnerId: "external-dns"
+txtOwnerId: external-dns
 provider: azure
 azure:
   cloud: AzurePublicCloud
@@ -12,3 +12,5 @@ azure:
   tenantId: ${TENANT_ID}
   subscriptionId: ${SUBSCRIPTION_ID}
   useManagedIdentityExtension: true
+domainFilters:
+  - ${DOMAIN_NAME}

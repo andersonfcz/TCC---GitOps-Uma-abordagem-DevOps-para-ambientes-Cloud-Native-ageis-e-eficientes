@@ -1,16 +1,17 @@
 server:
   ingress:
     enabled: true
-    ingressClassName: nginx
     hosts:
       - argocd.tcc-unicarioca.tech
     annotations:
-      cert-manager.io/cluster-issuer: lets-encrypt
+      cert-manager.io/cluster-issuer: letsencrypt
+      kubernetes.io/ingress.class: nginx
     tls:
       - hosts:
           - argocd.tcc-unicarioca.tech
-        secretName: lets-encrypt
-  extraArgs:
-    - --insecure
+        secretName: argocd-secret
+configs:
+  params:
+    server.insecure: true
 notifications:
   enabled: false

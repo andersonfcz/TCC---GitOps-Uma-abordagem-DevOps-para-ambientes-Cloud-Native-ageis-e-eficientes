@@ -1,4 +1,4 @@
-variable "resource_name" {
+variable "resource_group_name" {
   type    = string
   default = "tcc-unicarioca-gitops"
 }
@@ -19,14 +19,8 @@ variable "vm_size" {
 }
 
 variable "dns_name" {
-  type = string
+  type    = string
   default = "tcc-unicarioca.tech"
-}
-
-variable "app_id" {
-}
-
-variable "password" {
 }
 
 variable "tenant_id" {
@@ -36,5 +30,5 @@ variable "subscription_id" {
 }
 
 variable "email" {
-  
+
 }
