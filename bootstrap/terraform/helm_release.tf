@@ -104,3 +104,18 @@ resource "kubectl_manifest" "cert_manager_issuer" {
     helm_release.cert_manager
   ]
 }
+
+resource "kubectl_manifest" "db_secrets" {
+  yaml_body = templatefile(
+    "${path.module}/../helm/secrets/db-secrets.yaml",
+    {
+      DB_NAME = var.db_name
+      DB_PASSWORD = var.db_password
+      DB_USER = var.db_user
+      DB_HOST = var.db_host
+    }
+  )
+  depends_on = [
+    azurerm_kubernetes_cluster.main
+  ]
+}
