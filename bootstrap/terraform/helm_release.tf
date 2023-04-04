@@ -109,10 +109,10 @@ resource "kubectl_manifest" "db_secrets" {
   yaml_body = templatefile(
     "${path.module}/../helm/secrets/db-secrets.yaml",
     {
-      DB_NAME = var.db_name
-      DB_PASSWORD = var.db_password
-      DB_USER = var.db_user
-      DB_HOST = var.db_host
+      DB_NAME = base64encode("${var.db_name}")
+      DB_PASSWORD = base64encode("{var.db_password}")
+      DB_USER = base64encode("${var.db_user}")
+      DB_HOST = base64encode("${var.db_host}")
     }
   )
   depends_on = [
