@@ -28,9 +28,10 @@ jobs:
             - name: Install dependencies
               id: dependencies
               run: |
-                curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-                && curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-                && apt update \
+                curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - \
+                && sudo touch /etc/apt/sources.list.d/mssql-release.list \
+                && curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee -a /etc/apt/sources.list.d/mssql-release.list \
+                && sudo apt update \
                 && ACCEPT_EULA=Y sudo apt install -y msodbcsql18
                 pip install -r requirements.txt
 
@@ -43,29 +44,7 @@ jobs:
                 DB_USER: ${{ secrets.DB_USER }}
                 DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
                 DB_HOST: ${{ secrets.DB_HOST }}
-            
-            - uses: actions/github-script@v6
-              if: github.event_name == 'pull_request'
-              with:
-                github-token: ${{ secrets.GITHUB_TOKEN }}
-                script: |
-                    const output = `#### UNIT TESTS 🤖\`${{ steps.test.outcome }}\`
-                    <details><summary>TESTS Output</summary>
-                
-                    \`\`\`\n
-                    ${{ steps.test.outputs.stdout }}
-                    \`\`\`
-                
-                    </details>
-                
-                    *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-                
-                    github.rest.issues.createComment({
-                        issue_number: context.issue.number,
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body: output
-                    })
+                TEST: true
                 
             - name: Unit test status
               if: steps.test.outcome == 'failure'
@@ -73,6 +52,7 @@ jobs:
 
             - name: Docker Login
               id: login
+              if: github.ref == 'refs/heads/main' && github.event_name == 'push'
               uses: docker/login-action@v2
               with:
                 username: ${{ secrets.REGISTRY_USER }}
