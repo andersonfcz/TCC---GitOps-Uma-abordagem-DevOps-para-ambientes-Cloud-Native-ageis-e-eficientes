@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'customers',
+    'suppliers'
 ]
 
 MIDDLEWARE = [
@@ -86,6 +87,14 @@ DATABASES = {
         'OPTIONS': {'driver': 'ODBC Driver 18 for SQL Server', },
     }
 }
+
+if os.environ.get('TEST'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
