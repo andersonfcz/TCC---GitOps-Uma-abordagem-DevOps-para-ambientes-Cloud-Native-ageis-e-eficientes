@@ -61,11 +61,9 @@ jobs:
             - name: Docker Image build and push
               id: build
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-              uses: docker/build-push-action@v4
-              with:
-                context: .
-                push: true
-                tags: "${{env.REPOSITORY}}/${{env.IMAGENAME}}:${{env.TAG}}"
+              run: |
+                docker build -t "${{env.REPOSITORY}}/${{env.IMAGENAME}}:${{env.TAG}}" .
+                docker push "${{env.REPOSITORY}}/${{env.IMAGENAME}}:${{env.TAG}}"
               env:
                 TAG: ${{ github.run_number }}
                 REPOSITORY: ${{ secrets.REGISTRY_USER }}
