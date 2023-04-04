@@ -30,7 +30,7 @@ def supplier_list(request):
 
 @csrf_exempt
 def supplier_detail(request, pk):
-    supplier = get_object_or_404(supplier, pk=pk)
+    supplier = get_object_or_404(Supplier, pk=pk)
 
     if request.method == 'GET':
         data = serializers.serialize('json', [supplier])

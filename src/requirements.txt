@@ -5,3 +5,4 @@ psycopg2-binary==2.9.5
 pyodbc==4.0.35
 pytz==2023.3
 sqlparse==0.4.3
+tzdata==2023.3

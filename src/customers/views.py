@@ -30,7 +30,7 @@ def customer_list(request):
 
 @csrf_exempt
 def customer_detail(request, pk):
-    customer = get_object_or_404(customer, pk=pk)
+    customer = get_object_or_404(Customer, pk=pk)
 
     if request.method == 'GET':
         data = serializers.serialize('json', [customer])
