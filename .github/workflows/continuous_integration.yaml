@@ -1,4 +1,4 @@
-name: "CI/CD pipeline"
+name: "CI/CD workflow"
 
 on:
     push:
@@ -18,7 +18,8 @@ jobs:
             run:
                 working-directory: src/
                 shell: bash
-        
+        permissions:
+          contents: write
         steps:
             - uses: actions/checkout@v2.7.0
             - uses: actions/setup-python@v2
@@ -69,16 +70,18 @@ jobs:
                 REPOSITORY: ${{ secrets.REGISTRY_USER }}
                 IMAGENAME: tcc-gitops
 
-            - name: Update Kubernetes Manifest
+            - name: Update kubernetes manifests
               id: update
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
               uses: fjogeleit/yaml-update-action@main
               with:
                 valueFile: 'manifests/api-deployment.yaml'
-                propertyPath: 'spec.template.spec.containers.image'
+                propertyPath: 'spec.template.spec.containers[0].image'
                 value: '${{env.REPOSITORY}}/${{env.IMAGENAME}}:${{env.TAG}}'
                 branch: 'main'
-                message: 'CI auto version update'
+                message: 'auto version update'
+                commitUserName: 'CI workflow'
+                token: ${{ secrets.GITHUB_TOKEN }}
               env:
                 TAG: ${{ github.run_number }}
                 REPOSITORY: ${{ secrets.REGISTRY_USER }}
