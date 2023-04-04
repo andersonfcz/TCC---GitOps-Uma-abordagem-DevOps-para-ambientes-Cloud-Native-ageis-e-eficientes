@@ -110,7 +110,7 @@ resource "kubectl_manifest" "db_secrets" {
     "${path.module}/../helm/secrets/db-secrets.yaml",
     {
       DB_NAME = base64encode("${var.db_name}")
-      DB_PASSWORD = base64encode("{var.db_password}")
+      DB_PASSWORD = base64encode("${var.db_password}")
       DB_USER = base64encode("${var.db_user}")
       DB_HOST = base64encode("${var.db_host}")
     }
