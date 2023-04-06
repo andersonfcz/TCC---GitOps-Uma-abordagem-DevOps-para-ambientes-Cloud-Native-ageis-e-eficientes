@@ -13,28 +13,28 @@ spec:
         app: myapp
     spec:
       containers:
-      - name: myapp
-        image: andersonfcz/tcc-gitops:latest
-        ports:
-        - containerPort: 8000
-        env:
-        - name: DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: db-secrets
-              key: name
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: db-secrets
-              key: user
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-secrets
-              key: password
-        - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: db-secrets
-              key: host
+        - name: myapp
+          image: andersonfcz/tcc-gitops:1
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: name
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: password
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: host
