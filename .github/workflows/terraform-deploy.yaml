@@ -17,7 +17,7 @@ jobs:
     terraform:
         name: "Terraform Deployment"
         runs-on: ubuntu-latest
-        env: 
+        env:
             ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
             ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
             ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
@@ -41,14 +41,14 @@ jobs:
             - name: Terraform validate
               id: validate
               run: terraform validate -no-color
-            
+
             - name: Terraform validate status
               if: steps.validate.outcome == 'failure'
               run: exit 1
-            
+
             - name: Terraform plan
               id: plan
-              if: github.event_name == 'pull-request'
+              if: github.event_name == 'pull_request'
               run: terraform plan -no-color -input=false
               continue-on-error: true
               env:
@@ -67,39 +67,39 @@ jobs:
               with:
                 github-token: ${{ secrets.GITHUB_TOKEN }}
                 script: |
-                  const output = `#### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-                  #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+                  const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+                  #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
                   <details><summary>Validation Output</summary>
-            
+
                   \`\`\`\n
                   ${{ steps.validate.outputs.stdout }}
                   \`\`\`
-            
+
                   </details>
-            
+
                   #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            
+
                   <details><summary>Show Plan</summary>
-            
+
                   \`\`\`\n
                   ${process.env.PLAN}
                   \`\`\`
-            
+
                   </details>
-            
+
                   *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-            
+
                   github.rest.issues.createComment({
                     issue_number: context.issue.number,
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     body: output
                   })
-            
+
             - name: Terraform plan status
               if: steps.plan.outcome == 'failure'
               run: exit 1
-              
+
             - name: Terraform apply
               id: apply
               if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
