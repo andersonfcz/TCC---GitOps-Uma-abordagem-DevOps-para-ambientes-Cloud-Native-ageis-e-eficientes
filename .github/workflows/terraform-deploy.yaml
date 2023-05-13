@@ -48,7 +48,7 @@ jobs:
             
             - name: Terraform plan
               id: plan
-              if: github.event_name == 'pull-request'
+              if: github.event_name == 'pull_request'
               run: terraform plan -no-color -input=false
               continue-on-error: true
               env:
@@ -67,8 +67,8 @@ jobs:
               with:
                 github-token: ${{ secrets.GITHUB_TOKEN }}
                 script: |
-                  const output = `#### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-                  #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+                  const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+                  #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`                  
                   <details><summary>Validation Output</summary>
             
                   \`\`\`\n
