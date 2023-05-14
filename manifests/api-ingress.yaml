@@ -6,7 +6,7 @@ spec:
   ingressClassName: nginx
   rules:
   - host: "tcc-unicarioca.tech"
-    http:
+    https:
       paths:
       - pathType: Prefix
         path: "/"
