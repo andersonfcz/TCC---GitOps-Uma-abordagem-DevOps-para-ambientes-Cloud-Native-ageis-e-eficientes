@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: andersonfcz/tcc-gitops:3
+          image: andersonfcz/tcc-gitops:11
           ports:
             - containerPort: 8000
           env:
