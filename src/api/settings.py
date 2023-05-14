@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     'customers',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://tcc-unicarioca.tech'
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

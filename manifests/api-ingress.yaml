@@ -3,10 +3,14 @@ kind: Ingress
 metadata:
   name: myapp
 spec:
+  tls:
+  - hosts: 
+    - "tcc-unicarioca.tech"
+    secretName: api-secret
   ingressClassName: nginx
   rules:
   - host: "tcc-unicarioca.tech"
-    https:
+    http:
       paths:
       - pathType: Prefix
         path: "/"

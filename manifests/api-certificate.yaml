@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  secretName: api-secret
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  dnsNames:
+  - 'tcc-unicarioca.tech'
+
+  
