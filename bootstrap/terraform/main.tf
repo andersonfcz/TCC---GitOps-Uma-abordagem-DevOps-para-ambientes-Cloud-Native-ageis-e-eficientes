@@ -35,3 +35,4 @@ resource "azurerm_role_assignment" "external_dns" {
   skip_service_principal_aad_check = true
 }
 
+# comment
